@@ -2,6 +2,7 @@ from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django import forms
+from django.core.cache import cache
 
 from posts.models import Post, Group, Follow
 from posts.views import LAST_POSTS
@@ -41,6 +42,7 @@ class PostPagesTests(TestCase):
         self.authorized_client.force_login(self.user)
         self.not_author_vlient = Client()
         self.not_author_vlient.force_login(self.one_user)
+        cache.clear()
 
     def test_pages_uses_correct_template(self):
         templates_pages_names = {

@@ -1,5 +1,6 @@
 from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
+from django.core.cache import cache
 
 from posts.models import Post, Group
 
@@ -28,6 +29,7 @@ class PostURLTests(TestCase):
         self.not_author_vlient.force_login(self.one_user)
         self.authorized_client = Client()
         self.authorized_client.force_login(self.user)
+        cache.clear()
 
     def test_homepage(self):
         response = self.guest_client.get('/')
