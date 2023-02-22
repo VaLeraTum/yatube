@@ -34,57 +34,57 @@ class PostURLTests(TestCase):
         cache.clear()
 
     def test_homepage(self):
-        '''Проверка главной страницы'''
+        """Проверка главной страницы"""
         response = self.guest_client.get('/')
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_post_group_url_exists_at_desired_location(self):
-        '''Проверка страницы группы'''
+        """Проверка страницы группы"""
         response = self.guest_client.get(f'/group/{self.group.slug}/')
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_post_profile_url_exists_at_desired_location(self):
-        '''Проверка страницы профайла'''
+        """Проверка страницы профайла"""
         response = self.guest_client.get(f'/profile/{self.post.author}/')
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_post_id_url_exists_at_desired_location(self):
-        '''Проверка страницы поста'''
+        """Проверка страницы поста"""
         response = self.guest_client.get(f'/posts/{self.post.pk}/')
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_post_edit_url_exists_at_desired_location_authorized(self):
-        '''Проверка редактирования поста'''
+        """Проверка редактирования поста"""
         response = self.authorized_client.get(f'/posts/{self.post.pk}/edit/')
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_post_create_url_exists_at_desired_location_authorized(self):
-        '''Проверка создания поста'''
+        """Проверка создания поста"""
         response = self.authorized_client.get('/create/')
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_url_not_exists_at_desired_location(self):
-        '''Проверка несуществующей старинцы'''
+        """Проверка несуществующей старинцы"""
         response = self.authorized_client.get('/unexisting_page/')
         self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
 
     def test_url_not_edit_at_desired_location(self):
-        '''Проверка преадресовки не авторизированного пользователя'''
+        """Проверка преадресовки не авторизированного пользователя"""
         response = self.guest_client.get(f'/posts/{self.post.pk}/edit/')
         self.assertEqual(response.status_code, HTTPStatus.FOUND)
 
     def test_url_not_edit_at_desired_location(self):
-        '''Проверка переадресовки не автора'''
+        """Проверка переадресовки не автора"""
         response = self.not_author_vlient.get(f'/posts/{self.post.pk}/edit/')
         self.assertEqual(response.status_code, HTTPStatus.FOUND)
 
     def test_url_not_edit_at_desired_location(self):
-        '''Проверка переадрессовки не авторизированного пользователя'''
+        """Проверка переадрессовки не авторизированного пользователя"""
         response = self.guest_client.get('/create/')
         self.assertEqual(response.status_code, HTTPStatus.FOUND)
 
     def test_urls_uses_correct_template(self):
-        '''Проверка что урл используют нужный шаблон'''
+        """Проверка что урл используют нужный шаблон"""
         templates_url_names = {
             '/': 'posts/index.html',
             f'/group/{self.group.slug}/': 'posts/group_list.html',

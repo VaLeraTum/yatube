@@ -52,7 +52,7 @@ class PostFormTests(TestCase):
         self.authorized_client.force_login(self.user)
 
     def test_create_post(self):
-        '''Тест создания поста'''
+        """Тест создания поста"""
         small_gif = (
             b'\x47\x49\x46\x38\x39\x61\x02\x00'
             b'\x01\x00\x80\x00\x00\x00\x00\x00'
@@ -83,7 +83,7 @@ class PostFormTests(TestCase):
         self.assertEqual(post.image, 'posts/small.gif')
 
     def test_edit_post(self):
-        '''Тесты редактирования поста'''
+        """Тесты редактирования поста"""
         posts_count = Post.objects.count()
         form_data = {
             'text': 'Тестовый пост 2',
@@ -108,10 +108,9 @@ class PostFormTests(TestCase):
         )
 
     def test_comment(self):
-        '''Комментарии может создавать только авторизованный пользователь'''
+        """Комментарии может создавать только авторизованный пользователь"""
         form_data = {
             'text': self.comment.text,
-            'author': self.user
         }
         self.authorized_client.get(
             reverse('posts:add_comment', kwargs={'post_id': self.post.id}),

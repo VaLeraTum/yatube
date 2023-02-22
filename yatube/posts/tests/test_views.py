@@ -70,7 +70,7 @@ class PostPagesTests(TestCase):
         self.not_author_vlient.force_login(self.one_user)
 
     def test_pages_uses_correct_template(self):
-        '''Страницы используют нужный шаблон'''
+        """Страницы используют нужный шаблон"""
         cache.clear()
         templates_pages_names = {
             reverse('posts:index'): 'posts/index.html',
@@ -92,7 +92,7 @@ class PostPagesTests(TestCase):
                 self.assertTemplateUsed(response, template)
 
     def test_post_index_show_correct_context(self):
-        ''' В индекс передан верный context'''
+        """ В индекс передан верный context"""
         cache.clear()
         response = self.authorized_client.get(reverse('posts:index'))
         first_object = response.context['page_obj'][0]
@@ -103,7 +103,7 @@ class PostPagesTests(TestCase):
         self.assertEqual(first_object.image, 'posts/small.gif')
 
     def test_group_list_page_show_correct_context(self):
-        ''' В груп_лист передан верный context'''
+        """ В груп_лист передан верный context"""
         response = self.authorized_client.get(
             reverse('posts:group_list', kwargs={'slug': self.group.slug})
         )
@@ -123,7 +123,7 @@ class PostPagesTests(TestCase):
         self.assertEqual(first_object.image, 'posts/small.gif')
 
     def test_post_detail_page_show_correct_context(self):
-        ''' В пост_детаил передан верный context'''
+        """В пост_детаил передан верный context"""
         response = self.authorized_client.get(
             reverse('posts:post_detail', kwargs={'post_id': self.post.pk})
         )
@@ -134,7 +134,7 @@ class PostPagesTests(TestCase):
         self.assertEqual(response.context.get('post').image, 'posts/small.gif')
 
     def test_post_profile_page_show_correct_context(self):
-        ''' В профайл передан верный context'''
+        """В профайл передан верный context"""
         response = self.authorized_client.get(
             reverse('posts:profile', kwargs={'username': self.post.author})
         )
@@ -146,7 +146,7 @@ class PostPagesTests(TestCase):
         self.assertEqual(first_object.image, 'posts/small.gif')
 
     def test_post_create_page_show_correct_context(self):
-        ''' В создании поста передан верный context'''
+        """В создании поста передан верный context"""
         response = self.authorized_client.get(reverse('posts:post_create'))
         form_fields = {
             'text': forms.fields.CharField,
@@ -158,7 +158,7 @@ class PostPagesTests(TestCase):
                 self.assertIsInstance(form_field, expected)
 
     def test_post_edit_page_show_correct_context(self):
-        ''' В редактирование поста передан верный context'''
+        """В редактирование поста передан верный context"""
         response = self.authorized_client.get(
             reverse('posts:post_edit', kwargs={'post_id': self.post.id})
         )
@@ -172,14 +172,14 @@ class PostPagesTests(TestCase):
                 self.assertIsInstance(form_field, expected)
 
     def test_group_not_show(self):
-        '''Пост не появляется в той группе, в которой он не состоит'''
+        """Пост не появляется в той группе, в которой он не состоит"""
         response = self.authorized_client.get(
             reverse('posts:group_list', kwargs={'slug': self.group2.slug})
         )
         self.assertNotIn(self.post, response.context['page_obj'])
 
     def test_auth_follow(self):
-        '''пользователь может подписываться'''
+        """пользователь может подписываться"""
         follow_count = Follow.objects.count()
         self.authorized_client.get(
             reverse('posts:profile_follow', kwargs={'username': self.one_user})
@@ -201,7 +201,7 @@ class PostPagesTests(TestCase):
         self.assertEqual(follow_count_start, follow_count_end)
 
     def test_index_post_lent(self):
-        '''Проверка ленты подписок'''
+        """Проверка ленты подписок"""
         response = self.not_author_vlient.get(reverse('posts:follow_index'))
         self.assertIn(self.post, response.context['page_obj'])
 
@@ -240,7 +240,7 @@ class PaginatorViewsTest(TestCase):
         ]
 
     def test_first_page_contains_ten_records(self):
-        '''Проверка пагинатора'''
+        """Проверка пагинатора"""
         cache.clear()
         for reverse_name in self.tamplate:
             with self.subTest(reverse_name=reverse_name):
@@ -248,7 +248,7 @@ class PaginatorViewsTest(TestCase):
                 self.assertEqual(len(response.context['page_obj']), LAST_POSTS)
 
     def test_first_page_contains_three_records(self):
-        '''Проверка пагинатора'''
+        """Проверка пагинатора"""
         for reverse_name in self.tamplate:
             with self.subTest(reverse_name=reverse_name):
                 response = self.client.get(reverse_name + '?page=2')
