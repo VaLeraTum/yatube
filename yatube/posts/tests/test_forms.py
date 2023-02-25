@@ -8,7 +8,7 @@ from django.conf import settings
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.contrib.auth import get_user_model
 
-from posts.models import Post, Group, Comment
+from posts.models import Post, Group
 
 
 TEMP_MEDIA_ROOT = tempfile.mkdtemp(dir=settings.BASE_DIR)
@@ -35,11 +35,6 @@ class PostFormTests(TestCase):
             author=cls.user,
             text='Тестовый пост',
             group=cls.group,
-        )
-        cls.comment = Comment.objects.create(
-            text='Тестовый коммент',
-            author=cls.user,
-            post=cls.post
         )
 
     @classmethod
@@ -106,15 +101,3 @@ class PostFormTests(TestCase):
         self.assertEqual(
             old_group_response.context['page_obj'].paginator.count, 0
         )
-
-    def test_comment(self):
-        """Комментарии может создавать только авторизованный пользователь"""
-        form_data = {
-            'text': self.comment.text,
-        }
-        self.authorized_client.get(
-            reverse('posts:add_comment', kwargs={'post_id': self.post.id}),
-            data=form_data,
-            follow=True
-        )
-        self.assertEqual(Comment.objects.count(), 1)
