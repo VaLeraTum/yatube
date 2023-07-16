@@ -9,6 +9,7 @@ class ErrorTemplate(TestCase):
         self.guest_client = Client()
 
     def test_pages_error_uses_correct_template(self):
+        """Тестирует корректность работы кастомных шаблонов."""
         templates_pages_names = {
             reverse(handler404): 'core/404.html',
             reverse(handler403): 'core/403csfr.html'

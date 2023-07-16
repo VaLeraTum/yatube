@@ -11,6 +11,7 @@ LAST_POSTS = 10
 
 @cache_page(20, key_prefix='index_page')
 def index(request):
+    """Генерирует главную ленту."""
     post_list = Post.objects.all()
     page_obj = paginator_fun(request, post_list)
     context = {
@@ -21,6 +22,7 @@ def index(request):
 
 
 def group_posts(request, slug):
+    """Генерирует страницу группы."""
     group = get_object_or_404(Group, slug=slug)
     posts = group.posts.all()
     page_obj = paginator_fun(request, posts)
@@ -32,6 +34,7 @@ def group_posts(request, slug):
 
 
 def profile(request, username):
+    """Генерирует страницу профиля пользователя."""
     author = get_object_or_404(User, username=username)
     post_list = author.posts.all()
     page_obj = paginator_fun(request, post_list)
@@ -47,6 +50,7 @@ def profile(request, username):
 
 
 def post_detail(request, post_id):
+    """Генерирует страницу поста."""
     post = get_object_or_404(Post, id=post_id)
     comments = post.comments.all()
     form = CommentForm(request.POST or None)
@@ -60,6 +64,7 @@ def post_detail(request, post_id):
 
 @login_required
 def post_create(request):
+    """Генерирует страницу создания поста."""
     form = PostForm(request.POST or None, files=request.FILES or None)
     context = {
         'form': form,
@@ -74,6 +79,7 @@ def post_create(request):
 
 @login_required
 def post_edit(request, post_id):
+    """Генерирует страницу редактирования поста."""
     post = get_object_or_404(Post, id=post_id)
     if post.author != request.user:
         return redirect('posts:post_detail', post_id=post_id)
@@ -94,6 +100,7 @@ def post_edit(request, post_id):
 
 @login_required
 def add_comment(request, post_id):
+    """Отвечает за создания комментария."""
     post = get_object_or_404(Post, id=post_id)
     form = CommentForm(request.POST or None)
     if form.is_valid():
@@ -106,6 +113,7 @@ def add_comment(request, post_id):
 
 @login_required
 def follow_index(request):
+    """Генерирует ленту подписок."""
     post_list = Post.objects.filter(author__following__user=request.user)
     page_obj = paginator_fun(request, post_list)
     context = {
@@ -116,6 +124,7 @@ def follow_index(request):
 
 @login_required
 def profile_follow(request, username):
+    """Отвечает за подписку."""
     author = get_object_or_404(User, username=username)
     if author != request.user:
         Follow.objects.get_or_create(user=request.user, author=author)
@@ -124,6 +133,7 @@ def profile_follow(request, username):
 
 @login_required
 def profile_unfollow(request, username):
+    """Отвечает за отписку."""
     author = get_object_or_404(User, username=username)
     Follow.objects.filter(user=request.user, author=author).delete()
     return redirect('posts:profile', username=author)
